@@ -1,0 +1,499 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="{% static "adminstatic/vendors/feather/feather.css" %}">
+  <link rel="stylesheet" href="{% static "adminstatic/vendors/ti-icons/css/themify-icons.css" %}">
+  <link rel="stylesheet" href="{% static "adminstatic/vendors/css/vendor.bundle.base.css" %}">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="{% static "adminstatic/vendors/datatables.net-bs4/dataTables.bootstrap4.css" %}">
+  <link rel="stylesheet" href="{% static "adminstatic/vendors/ti-icons/css/themify-icons.css" %}">
+  <link rel="stylesheet" type="text/css" href="{% static "adminstatic/js/select.dataTables.min.css" %}">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static "adminstatic/css/vertical-layout-light/style.css" %}">
+  <!-- endinject -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+</head>
+
+<body>
+  {% if messages %}
+  {% for message in messages %}
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+  <script>swal({
+          title: "Success!",
+          text: "{{message}}",
+          icon: "success",
+          button: "OK",
+      });
+  </script>
+  
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+  <script>swal({
+          title: "Warning :)",
+          text: "{{message}}",
+          icon: "warning", 
+          button: "OK",
+       
+      });
+  </script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+  <script>swal({
+          title: "info :)",
+          text: "{{message}}",
+          icon: "info",
+          button: "OK",
+      });
+  </script>
+  {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+  <script>swal({
+          title: "error :)",
+          text: "{{message}}",
+          icon: "error",
+          button: "OK",
+      });
+  </script>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo mr-5" href="{% url "admin_index" %}"><h4>Admin</h4></a>
+        <a class="navbar-brand brand-logo-mini" href="{% url "admin_index" %}"><img src="{% static "adminstatic/images/logo-mini.svg" %}" alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="icon-menu"></span>
+        </button>
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group">
+              <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                <span class="input-group-text" id="search">
+                  <i class="icon-search"></i>
+                </span>
+              </div>
+              <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now"
+                aria-label="search" aria-describedby="search">
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item dropdown">
+            <a class="dropdown-item" href="{% url "user_index" %}">
+              <i class="ti-power-off text-primary" ></i>
+              Logout
+            </a>
+           
+          </li>
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <img src="{% static "adminstatic/images/faces/face28.jpg" %}" alt="profile" />
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              
+              <a class="dropdown-item">
+                <i class="ti-power-off text-primary"></i>
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "admin_index" %}">
+              <i class="icon-grid menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="icon-head menu-icon"></i>
+              <span class="menu-title">Mining Company</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url "admin_addcompany" %}"> Add New Company </a></li>
+                      <li class="nav-item"> <a class="nav-link" href="{% url "admin_managecompany" %}"> Manage Companies </a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#user" aria-expanded="false" aria-controls="user">
+              <i class="icon-head menu-icon"></i>
+              <span class="menu-title">Security Management</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="user">  
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url "admin_adduser" %}"> Add Security Guard </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url "admin_users" %}"> Manage Security </a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <i class="icon-layout menu-icon"></i>
+              <span class="menu-title">Vehicle Management</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url "admin_addvehicle" %}">Add Vehicle</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url "admin_managevehicle" %}">Manage vehicle</a></li>
+                </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "admin_validvehicle" %}">
+              <i class="icon-grid-2 menu-icon"></i>
+              <span class="menu-title">Vehicle Activities</span>
+            </a>
+          </li>
+          
+          
+         </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="row">
+                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                  <h3 class="font-weight-bold">Welcome Admin</h3>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 grid-margin transparent">
+              <div class="row"> 
+                <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                  <div class="card card-light-blue">
+                    <div class="card-body">
+                      <p class="mb-4">No Of Companies</p>
+                      <p class="fs-30 mb-2">{{all}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 stretch-card transparent">
+                  <div class="card card-light-danger">
+                    <div class="card-body">
+                      <p class="mb-4">No Of Security Personnels</p>
+                      <p class="fs-30 mb-2">{{security}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>  
+            </div>
+            <div class="col-md-6 grid-margin transparent">
+              <div class="row">
+                <div class="col-md-6 mb-4 stretch-card transparent">
+                  <div class="card card-tale">
+                    <div class="card-body">
+                      <p class="mb-4">No of Vehicles</p>
+                      <p class="fs-30 mb-2">{{veh}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4 stretch-card transparent">
+                  <div class="card card-dark-blue">
+                    <div class="card-body">
+                      <p class="mb-4">No Of Scanned Vehicles</p>
+                      <p class="fs-30 mb-2">{{scan}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card position-relative">
+                <div class="card-body">
+                  <div id="detailedReports" class="carousel slide detailed-report-carousel position-static pt-2"
+                    data-ride="carousel">
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <div class="row">
+                          <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
+                            <div class="ml-xl-4 mt-3">
+                              <p class="card-title">Detailed Reports</p>
+                              <h1 class="text-primary">$34040</h1>
+                              <h3 class="font-weight-500 mb-xl-4 text-primary">North America</h3>
+                              <p class="mb-2 mb-xl-0">The total number of sessions within the date range. It is the
+                                period time a user is actively engaged with your website, page or app, etc</p>
+                            </div>
+                          </div>
+                          <div class="col-md-12 col-xl-9">
+                            <div class="row">
+                              <div class="col-md-6 border-right">
+                                <div class="table-responsive mb-3 mb-md-0 mt-3">
+                                  <table class="table table-borderless report-table">
+                                    <tr>
+                                      <td class="text-muted">Illinois</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-primary" role="progressbar" style="width: 70%"
+                                            aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">713</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Washington</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-warning" role="progressbar" style="width: 30%"
+                                            aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">583</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Mississippi</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-danger" role="progressbar" style="width: 95%"
+                                            aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">924</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">California</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-info" role="progressbar" style="width: 60%"
+                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">664</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Maryland</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-primary" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">560</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Alaska</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-danger" role="progressbar" style="width: 75%"
+                                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">793</h5>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                              <div class="col-md-6 mt-3">
+                                <canvas id="north-america-chart"></canvas>
+                                <div id="north-america-legend"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <div class="row">
+                          <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
+                            <div class="ml-xl-4 mt-3">
+                              <p class="card-title">Detailed Reports</p>
+                              <h1 class="text-primary">$34040</h1>
+                              <h3 class="font-weight-500 mb-xl-4 text-primary">North America</h3>
+                              <p class="mb-2 mb-xl-0">The total number of sessions within the date range. It is the
+                                period time a user is actively engaged with your website, page or app, etc</p>
+                            </div>
+                          </div>
+                          <div class="col-md-12 col-xl-9">
+                            <div class="row">
+                              <div class="col-md-6 border-right">
+                                <div class="table-responsive mb-3 mb-md-0 mt-3">
+                                  <table class="table table-borderless report-table">
+                                    <tr>
+                                      <td class="text-muted">Illinois</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-primary" role="progressbar" style="width: 70%"
+                                            aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">713</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Washington</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-warning" role="progressbar" style="width: 30%"
+                                            aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">583</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Mississippi</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-danger" role="progressbar" style="width: 95%"
+                                            aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">924</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">California</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-info" role="progressbar" style="width: 60%"
+                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">664</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Maryland</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-primary" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">560</h5>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td class="text-muted">Alaska</td>
+                                      <td class="w-100 px-0">
+                                        <div class="progress progress-md mx-4">
+                                          <div class="progress-bar bg-danger" role="progressbar" style="width: 75%"
+                                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <h5 class="font-weight-bold mb-0">793</h5>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </div>
+                              <div class="col-md-6 mt-3">
+                                <canvas id="south-america-chart"></canvas>
+                                <div id="south-america-legend"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#detailedReports" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#detailedReports" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+              <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <a
+                      href="https:mining.in" target="_blank">mining.in</a>
+                  All rights reserved.</span>
+              <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Created by Mining Developer 2023<i class="ti-heart text-danger ml-1"></i></span>
+          </div>
+      </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- plugins:js -->
+  <script src="{% static "adminstatic/vendors/js/vendor.bundle.base.js" %}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="{% static "adminstatic/vendors/chart.js/Chart.min.js" %}"></script>
+  <script src="{% static "adminstatic/vendors/datatables.net/jquery.dataTables.js" %}"></script>
+  <script src="{% static "adminstatic/vendors/datatables.net-bs4/dataTables.bootstrap4.js" %}"></script>
+  <script src="{% static "adminstatic/js/dataTables.select.min.js" %}"></script>
+
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="{% static "adminstatic/js/off-canvas.js" %}"></script>
+  <script src="{% static "adminstatic/js/hoverable-collapse.js" %}"></script>
+  <script src="{% static "admiinstatic/js/template.js" %}"></script>
+  <script src="{% static "adminstatic/js/settings.js" %}"></script>
+  <script src="{% static "adminstatic/js/todolist.js" %}"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="{% static "adminstatic/js/dashboard.js" %}"></script>
+  <script src="{% static "adminstatic/js/Chart.roundedBarCharts.js" %}"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>

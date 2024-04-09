@@ -1,0 +1,10 @@
+kindly install these sw in this order
+----------------------------------------
+1. Python 3.10.9
+2. VSCodeUserSetup
+3. VC_redist.x64
+4. vcredist_x64
+5. wampserver3.2.0_x64
+
+
+
